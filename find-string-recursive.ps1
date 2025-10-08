@@ -4,7 +4,7 @@ param(
 [string]$OutPut="none"
 )
 
-if($OutPut == "none"){
+if($OutPut -eq "none"){
 Get-ChildItem $Path -Recurse -Directory | ForEach-Object {$path = $_.FullName; findstr /i "$String" "$path\*"}
 }
 else{
