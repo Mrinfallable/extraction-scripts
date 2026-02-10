@@ -6,15 +6,15 @@ param(
 [string]$Len = ($String.length * 5)
 )
 
-#findstr /S "$String" "*.$Type"
 
 Get-ChildItem $Path -Recurse -Include "*.$Type" | Select-Object -Property "FullName" | ForEach-Object {
     $path = $_.FullName
-
-    $matchingPath = (findstr /i /N /m "$String" "$path")
+    $matchingPath = (findstr /i /N /m /c:"$String" "$path")
     echo $matchingPath
     if ($null -ne $matchingPath){
-        Get-Content $matchingPath | foreach-Object { $_.Substring(0, $len)}
+        $content = (Get-Content $matchingPath -Raw)
+        #echo $content
+        echo ($content.Substring($content.IndexOf($String), $len))
     }
 
 }
