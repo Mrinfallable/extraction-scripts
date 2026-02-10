@@ -1,11 +1,20 @@
 param(
 [string]$Path = ".",
 [string]$String = "*",
-[string]$Output = New-TemporaryFile | Select-Object -Property Name,
-[string]$Type = "*.*"
+[string]$Output = (New-TemporaryFile),
+[string]$Type = "*",
+[string]$Len = ($String.length * 5)
 )
 
-$dirs=Get-ChildItem
-Get-ChildItem $Path -Recurse -Directory | findstr /i "$Type | ForEach-Object {$path = $_.FullName; findstr /i "$String" "$path\*"} | Out-File -File $Output
+#findstr /S "$String" "*.$Type"
 
-Write-Output $Output
+Get-ChildItem $Path -Recurse -Include "*.$Type" | Select-Object -Property "FullName" | ForEach-Object {
+    $path = $_.FullName
+
+    $matchingPath = (findstr /i /N /m "$String" "$path")
+    echo $matchingPath
+    if ($null -ne $matchingPath){
+        Get-Content $matchingPath | foreach-Object { $_.Substring(0, $len)}
+    }
+
+}
