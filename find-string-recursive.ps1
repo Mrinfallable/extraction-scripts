@@ -9,7 +9,7 @@ param(
 
 Get-ChildItem $Path -Recurse -Include "*.$Type" | Select-Object -Property "FullName" | ForEach-Object {
     $path = $_.FullName
-    $matchingPath = (findstr /i /N /m /c:"$String" "$path")
+    $matchingPath = (findstr /i /m /c:"$String" "$path")
     echo $matchingPath
     if ($null -ne $matchingPath){
         $content = (Get-Content $matchingPath -Raw)
